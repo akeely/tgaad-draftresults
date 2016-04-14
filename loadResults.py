@@ -3,7 +3,9 @@
 import MySQLdb
 import json
 import os
+import boto3
 from jinja2 import Environment, FileSystemLoader
+
 
 def write_league_file(name, cursor):
     cursor.execute("""
@@ -28,6 +30,14 @@ def write_results_page(name, template):
     with open("html/results/{0}.html".format(name), 'w') as outfile:
         outfile.write(template.render(league_name=name))
 
+# Write a file to S3
+def write_file(bucket, local_path, remote_path=''):
+
+    if not remote_path:
+        remote_path = local_path
+
+    with open(local_path, 'r') as data:
+        bucket.put_object(Key=remote_path, Body=data, ContentType='text/html')
 
 config = {
   'user': 'root',
@@ -67,3 +77,12 @@ index_template = env.get_template('index.html')
 
 with open('html/index.html', 'w') as outfile:
     outfile.write(index_template.render(leagues=leagues))
+
+s3 = boto3.resource('s3')
+bucket = s3.Bucket('twoguysandadream.com')
+
+write_file(bucket, os.path.join('html', 'index.html'), 'index.html')
+
+for directory in ['data/results', 'html/results']:
+    for file in os.listdir(directory):
+        write_file(bucket, os.path.join(directory, file))
