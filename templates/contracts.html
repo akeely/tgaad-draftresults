@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('#draftResults').DataTable( {
+          "ajax": '/data/contracts/{{league_name}}.json'
+        } );
+      } );
+    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" />
+  </head>
+  <body>
+    <h2>Contracts - {{league_name}}</h2>
+    <table id="draftResults" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+              <th>Team</th>
+              <th>Player</th>
+              <th>Cost</th>
+              <th>Future Costs</th>
+              <th>Years Remaining</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+              <th>Team</th>
+              <th>Player</th>
+              <th>Cost</th>
+              <th>Future Costs</th>
+              <th>Years Remaining</th>
+            </tr>
+        </tfoot>
+    </table>
+
+  </body>
+</html>

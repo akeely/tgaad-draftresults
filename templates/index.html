@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <title>Two Guys and a Dream</title>
+  </head>
+  <body>
+    <h2>Draft Results</h2>
+    {% for sport in leagues.keys() %}
+      <h3>{{sport}}</h3>
+      <ul>
+        {% for league in leagues[sport]|sort %}
+          <li><a href="/html/results/{{league}}.html">{{league}}</a></li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  </body>
+</html>
