@@ -8,7 +8,7 @@
       <h3>{{sport}}</h3>
       <ul>
         {% for league in leagues[sport]|sort %}
-          <li>{{league}} - <a href="/html/results/{{league}}.html">Results</a> | <a href="/html/contracts/{{league}}.html">Contracts</a></li>
+          <li>{{league.name}} - <a href="/html/results/{{league.name}}.html">Results</a> | <a href="/html/contracts/{{league.name}}.html">Contracts</a></li>
         {% endfor %}
       </ul>
     {% endfor %}
