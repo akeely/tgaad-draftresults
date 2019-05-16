@@ -35,21 +35,24 @@ def write_results_page(name, template):
         outfile.write(template.render(league_name=name))
 
 
-def write_contracts_file(name, cursor):
+def write_contracts_file(league, cursor):
     cursor.execute("""
-        SELECT c.team, p.name, c.current_cost, c.years_left, c.broken
+        SELECT t.name, p.name, c.current_cost, c.years_left, c.broken
         FROM contracts c
         JOIN players p
-          ON p.playerid=c.player
-        WHERE league = '{0}'
-    """.format(name))
+          ON p.playerid=c.playerid
+        JOIN teams t
+          ON c.ownerid=t.ownerid
+          AND c.leagueid=t.leagueid
+        WHERE c.leagueid = '{0}'
+    """.format(league['id']))
 
     players = cursor.fetchall()
 
     data = {'data': players}
 
     data_dir = "data/contracts"
-    data_file = os.path.join(data_dir, "{0}.json".format(name))
+    data_file = os.path.join(data_dir, "{0}.json".format(league['name']))
 
     with open(data_file, 'w') as outfile:
         json.dump(data, outfile)
@@ -102,14 +105,14 @@ contracts_template = env.get_template('contracts.html')
 for league in leagues['baseball']:
     write_results_file(league, cursor)
     write_results_page(league['name'], results_template)
-    write_contracts_file(league['name'], cursor)
+    write_contracts_file(league, cursor)
     write_contracts_page(league['name'], contracts_template)
 
 
 for league in leagues['football']:
     write_results_file(league, cursor)
     write_results_page(league['name'], results_template)
-    write_contracts_file(league['name'], cursor)
+    write_contracts_file(league, cursor)
     write_contracts_page(league['name'], contracts_template)
 
 db.close()
